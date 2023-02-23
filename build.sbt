@@ -21,8 +21,6 @@ lazy val random = (project in file("."))
     randomCore.js,
     randomEffect.jvm,
     randomEffect.js,
-    randomGen.jvm,
-    randomGen.js,
   )
   .enablePlugins(JavaAppPackaging)
   .settings(commonSettings)
@@ -49,13 +47,6 @@ lazy val randomEffect = (crossProject(JSPlatform, JVMPlatform) in file("random-e
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-effect" % catsEffectVersion,
     ),
-  )
-
-lazy val randomGen = (crossProject(JSPlatform, JVMPlatform) in file("random-gen"))
-  .dependsOn(randomCore)
-  .settings(commonSettings)
-  .settings(
-    name := "random-gen",
   )
 
 val catsVersion = "2.9.0"
