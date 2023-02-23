@@ -19,6 +19,10 @@ lazy val random = (project in file("."))
   .aggregate(
     randomCore.jvm,
     randomCore.js,
+    randomEffect.jvm,
+    randomEffect.js,
+    randomGen.jvm,
+    randomGen.js,
   )
   .enablePlugins(JavaAppPackaging)
   .settings(commonSettings)
@@ -37,6 +41,24 @@ lazy val randomCore = (crossProject(JSPlatform, JVMPlatform) in file("random-cor
     ),
   )
 
+lazy val randomEffect = (crossProject(JSPlatform, JVMPlatform) in file("random-effect"))
+  .dependsOn(randomCore)
+  .settings(commonSettings)
+  .settings(
+    name := "random-effect",
+    libraryDependencies ++= Seq(
+      "org.typelevel" %%% "cats-effect" % catsEffectVersion,
+    ),
+  )
+
+lazy val randomGen = (crossProject(JSPlatform, JVMPlatform) in file("random-gen"))
+  .dependsOn(randomCore)
+  .settings(commonSettings)
+  .settings(
+    name := "random-gen",
+  )
+
 val catsVersion = "2.9.0"
+val catsEffectVersion = "3.4.6"
 val scalaCheckVersion = "1.17.0"
 val pekGenericCoreVersion = "0.1.0-SNAPSHOT"
