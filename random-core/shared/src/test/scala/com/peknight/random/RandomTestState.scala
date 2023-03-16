@@ -2,7 +2,7 @@ package com.peknight.random
 
 import cats.Monad
 import cats.data.StateT
-import com.peknight.generic.tuple.Lifted
+import com.peknight.generic.tuple.Map
 import com.peknight.generic.tuple.syntax.mapN
 import com.peknight.random.state.*
 
@@ -28,6 +28,6 @@ object RandomTestState:
       nextString(param.stringLength),
       nextPrintableChar,
       shuffle(param.list)
-    ).asInstanceOf[Lifted[[A] =>> StateT[F, Random[F], A], mirror.MirroredElemTypes]].mapN(mirror.fromProduct)
+    ).asInstanceOf[Map[mirror.MirroredElemTypes, [A] =>> StateT[F, Random[F], A]]].mapN(mirror.fromProduct)
 
 end RandomTestState
