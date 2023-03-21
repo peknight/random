@@ -43,6 +43,6 @@ package object state:
 
   def nextAlphaNumeric[F[_] : Applicative]: StateT[F, Random[F], Char] = StateT(_.nextAlphaNumeric)
 
-  def shuffle[F[_] : Applicative, T, C](xs: IterableOnce[T])(using BuildFrom[xs.type, T, C]): StateT[F, Random[F], C] =
+  def shuffle[F[_], T, C](xs: IterableOnce[T])(using Applicative[F], BuildFrom[xs.type, T, C]): StateT[F, Random[F], C] =
     StateT(_.shuffle(xs))
 end state

@@ -19,6 +19,8 @@ lazy val random = (project in file("."))
   .aggregate(
     randomCore.jvm,
     randomCore.js,
+    randomGeneric.jvm,
+    randomGeneric.js,
     randomEffect.jvm,
     randomEffect.js,
   )
@@ -36,6 +38,17 @@ lazy val randomCore = (crossProject(JSPlatform, JVMPlatform) in file("random-cor
       "org.typelevel" %%% "cats-core" % catsVersion,
       "org.scalacheck" %%% "scalacheck" % scalaCheckVersion % Test,
       "com.peknight" %%% "generic-core" % pekGenericVersion % Test,
+    ),
+  )
+
+lazy val randomGeneric = (crossProject(JSPlatform, JVMPlatform) in file("random-generic"))
+  .dependsOn(randomCore)
+  .settings(commonSettings)
+  .settings(
+    name := "random-generic",
+    libraryDependencies ++= Seq(
+      "com.peknight" %%% "generic-migration" % pekGenericVersion,
+      "com.peknight" %%% "generic-updater" % pekGenericVersion,
     ),
   )
 
