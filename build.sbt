@@ -47,8 +47,7 @@ lazy val randomGeneric = (crossProject(JSPlatform, JVMPlatform) in file("random-
   .settings(
     name := "random-generic",
     libraryDependencies ++= Seq(
-      "com.peknight" %%% "generic-migration" % pekGenericVersion,
-      "com.peknight" %%% "generic-updater" % pekGenericVersion,
+      "com.peknight" %%% "generic-mapper" % pekGenericVersion,
     ),
   )
 
