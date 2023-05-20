@@ -24,7 +24,6 @@ lazy val random = (project in file("."))
     randomEffect.jvm,
     randomEffect.js,
   )
-  .enablePlugins(JavaAppPackaging)
   .settings(commonSettings)
   .settings(
     name := "random",
