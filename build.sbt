@@ -1,6 +1,6 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.2.1"
+ThisBuild / scalaVersion := "3.3.0"
 
 ThisBuild / organization := "com.peknight"
 
@@ -60,7 +60,7 @@ lazy val randomEffect = (crossProject(JSPlatform, JVMPlatform) in file("random-e
     ),
   )
 
-val catsVersion = "2.9.0"
-val catsEffectVersion = "3.4.6"
+val catsVersion = "2.10.0"
+val catsEffectVersion = "3.5.1"
 val scalaCheckVersion = "1.17.0"
 val pekGenericVersion = "0.1.0-SNAPSHOT"
