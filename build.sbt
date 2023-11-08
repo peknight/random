@@ -19,10 +19,10 @@ lazy val random = (project in file("."))
   .aggregate(
     randomCore.jvm,
     randomCore.js,
-    randomGeneric.jvm,
-    randomGeneric.js,
     randomEffect.jvm,
     randomEffect.js,
+    randomMonocle.jvm,
+    randomMonocle.js,
   )
   .settings(commonSettings)
   .settings(
@@ -40,16 +40,6 @@ lazy val randomCore = (crossProject(JSPlatform, JVMPlatform) in file("random-cor
     ),
   )
 
-lazy val randomGeneric = (crossProject(JSPlatform, JVMPlatform) in file("random-generic"))
-  .dependsOn(randomCore)
-  .settings(commonSettings)
-  .settings(
-    name := "random-generic",
-    libraryDependencies ++= Seq(
-      "com.peknight" %%% "generic-mapper" % pekGenericVersion,
-    ),
-  )
-
 lazy val randomEffect = (crossProject(JSPlatform, JVMPlatform) in file("random-effect"))
   .dependsOn(randomCore)
   .settings(commonSettings)
@@ -60,7 +50,18 @@ lazy val randomEffect = (crossProject(JSPlatform, JVMPlatform) in file("random-e
     ),
   )
 
+lazy val randomMonocle = (crossProject(JSPlatform, JVMPlatform) in file("random-monocle"))
+  .dependsOn(randomCore)
+  .settings(commonSettings)
+  .settings(
+    name := "random-monocle",
+    libraryDependencies ++= Seq(
+      "dev.optics" %%% "monocle-core" % monocleVersion,
+    ),
+  )
+
 val catsVersion = "2.10.0"
 val catsEffectVersion = "3.5.1"
+val monocleVersion = "3.2.0"
 val scalaCheckVersion = "1.17.0"
 val pekGenericVersion = "0.1.0-SNAPSHOT"
