@@ -5,6 +5,7 @@ import cats.{Applicative, ApplicativeError, MonadError}
 import com.peknight.random.Random as Rand
 import com.peknight.random.algorithm.LinearCongruential
 import com.peknight.random.monad.Random as MonadRandom
+import scodec.bits.ByteVector
 
 import scala.collection.Factory
 
@@ -23,9 +24,9 @@ trait Random[F[_]](using MonadError[F, Throwable]) extends MonadRandom[F]:
       _between(minInclusive, maxExclusive)
   end between
 
-  override def nextBytes[C](n: Int)(factory: Factory[Byte, C]): F[(Rand[F], C)] =
+  override def nextBytes(n: Int): F[(Rand[F], ByteVector)] =
     require(n >= 0, s"size must be non-negative, but was $n") *>
-      _nextBytes[C](n)(factory)
+      _nextBytes(n)
   end nextBytes
 
   override def nextLongBounded(bound: Long): F[(Rand[F], Long)] =

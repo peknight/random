@@ -16,7 +16,7 @@ object RandomTestState:
       nextInt,
       nextIntBounded(param.intBound),
       between(param.intMin, param.intMax),
-      nextBytes(param.byteSize)(Vector),
+      nextBytes(param.byteSize),
       nextLong,
       nextLongBounded(param.longBound),
       between(param.longMin, param.longMax),

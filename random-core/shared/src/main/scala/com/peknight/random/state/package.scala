@@ -3,6 +3,7 @@ package com.peknight.random
 import cats.Applicative
 import cats.data.StateT
 import com.peknight.random.Random
+import scodec.bits.ByteVector
 
 import scala.collection.{BuildFrom, Factory}
 
@@ -15,8 +16,7 @@ package object state:
   def between[F[_] : Applicative](minInclusive: Int, maxExclusive: Int): StateT[F, Random[F], Int] =
     StateT(_.between(minInclusive, maxExclusive))
 
-  def nextBytes[F[_] : Applicative, C](n: Int)(factory: Factory[Byte, C]): StateT[F, Random[F], C] =
-    StateT(_.nextBytes(n)(factory))
+  def nextBytes[F[_] : Applicative](n: Int): StateT[F, Random[F], ByteVector] = StateT(_.nextBytes(n))
 
   def nextLong[F[_] : Applicative]: StateT[F, Random[F], Long] = StateT(_.nextLong)
 

@@ -35,6 +35,7 @@ lazy val randomCore = (crossProject(JSPlatform, JVMPlatform) in file("random-cor
     name := "random-core",
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-core" % catsVersion,
+      "org.scodec" %%% "scodec-bits" % scodecVersion,
       "org.scalacheck" %%% "scalacheck" % scalaCheckVersion % Test,
       "com.peknight" %%% "generic-core" % pekGenericVersion % Test,
     ),
@@ -61,6 +62,7 @@ lazy val randomMonocle = (crossProject(JSPlatform, JVMPlatform) in file("random-
   )
 
 val catsVersion = "2.12.0"
+val scodecVersion = "1.2.0"
 val catsEffectVersion = "3.5.4"
 val monocleVersion = "3.2.0"
 val scalaCheckVersion = "1.18.0"

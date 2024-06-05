@@ -4,6 +4,7 @@ import cats.Functor
 import cats.effect.std.Random as CERandom
 import cats.syntax.functor.*
 import com.peknight.random.Random as Rand
+import scodec.bits.ByteVector
 
 import scala.collection.{BuildFrom, Factory}
 
@@ -17,8 +18,8 @@ private[random] case class CatsEffectRandom[F[_] : Functor](random: CERandom[F])
   def between(minInclusive: Int, maxExclusive: Int): F[(Rand[F], Int)] =
     random.betweenInt(minInclusive, maxExclusive).map((this, _))
 
-  def nextBytes[C](n: Int)(factory: Factory[Byte, C]): F[(Rand[F], C)] =
-    random.nextBytes(n).map(bytes => (this, factory.newBuilder.addAll(bytes).result()))
+  def nextBytes(n: Int): F[(Rand[F], ByteVector)] =
+    random.nextBytes(n).map(bytes => (this, ByteVector(bytes)))
 
   def nextLong: F[(Rand[F], Long)] = random.nextLong.map((this, _))
 

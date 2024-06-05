@@ -1,5 +1,7 @@
 package com.peknight.random
 
+import scodec.bits.ByteVector
+
 import scala.collection.{BuildFrom, Factory}
 
 trait Random[F[_]]:
@@ -11,7 +13,7 @@ trait Random[F[_]]:
 
   def between(minInclusive: Int, maxExclusive: Int): F[(Random[F], Int)]
 
-  def nextBytes[C](n: Int)(factory: Factory[Byte, C]): F[(Random[F], C)]
+  def nextBytes(n: Int): F[(Random[F], ByteVector)]
 
   def nextLong: F[(Random[F], Long)]
 

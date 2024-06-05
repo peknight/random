@@ -4,6 +4,7 @@ import cats.Id
 import com.peknight.random.Random as Rand
 import com.peknight.random.algorithm.LinearCongruential
 import com.peknight.random.monad.Random as MonadRandom
+import scodec.bits.ByteVector
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
@@ -40,17 +41,15 @@ trait Random extends MonadRandom[Id]:
       go(this)
   end between
 
-  override def nextBytes[C](n: Int)(factory: Factory[Byte, C]): Id[(Rand[Id], C)] =
+  override def nextBytes(n: Int): Id[(Rand[Id], ByteVector)] =
     require(n >= 0, s"size must be non-negative, but was $n")
-    val builder = factory.newBuilder
-    @tailrec def go(random: Rand[Id], length: Int): Id[(Rand[Id], C)] =
-      if length <= 0 then (random, builder.result())
+    @tailrec def go(random: Rand[Id], bytes: ByteVector): Id[(Rand[Id], ByteVector)] =
+      val length = n - bytes.length.toInt
+      if length <= 0 then (random, bytes)
       else
         val (nextRandom, r) = random.nextInt
-        val size = length min 4
-        for i <- 0 until size do builder.addOne((r >> (8 * i)).toByte)
-        go(nextRandom, length - size)
-    go(this, n)
+        go(nextRandom, appendIntToBytes(bytes, r, length))
+    go(this, ByteVector.empty)
   end nextBytes
 
   override def nextLong: Id[(Rand[Id], Long)] =

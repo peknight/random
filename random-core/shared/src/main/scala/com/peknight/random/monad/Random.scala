@@ -7,6 +7,7 @@ import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import com.peknight.random.Random as Rand
 import com.peknight.random.algorithm.LinearCongruential
+import scodec.bits.ByteVector
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.{BuildFrom, Factory}
@@ -55,23 +56,25 @@ trait Random[F[_] : Monad] extends Rand[F]:
       }
   end _between
 
-  def nextBytes[C](n: Int)(factory: Factory[Byte, C]): F[(Rand[F], C)] =
+  def nextBytes(n: Int): F[(Rand[F], ByteVector)] =
     require(n >= 0, s"size must be non-negative, but was $n")
-    _nextBytes[C](n)(factory)
+    _nextBytes(n)
   end nextBytes
 
-  protected[random] def _nextBytes[C](n: Int)(factory: Factory[Byte, C]): F[(Rand[F], C)] =
-    val builder = factory.newBuilder
-    Monad[F].tailRecM[(Rand[F], Int), (Rand[F], C)]((this, n)) { case (random, length) =>
-      if length <= 0 then (random, builder.result()).asRight.pure else
-        for
-          nxt <- random.nextInt
-          (nextRandom, r) = nxt
-          size = length min 4
-          _ = for i <- 0 until size do builder.addOne((r >> (8 * i)).toByte)
-        yield (nextRandom, length - size).asLeft
+  protected[random] def _nextBytes(n: Int): F[(Rand[F], ByteVector)] =
+    Monad[F].tailRecM[(Rand[F], ByteVector), (Rand[F], ByteVector)]((this, ByteVector.empty)) { case (random, bytes) =>
+      val length = n - bytes.length.toInt
+      if length <= 0 then (random, bytes).asRight.pure else
+        random.nextInt.map { case (nextRandom, r) => (nextRandom, appendIntToBytes(bytes, r, length)).asLeft }
     }
   end _nextBytes
+
+  protected[random] def appendIntToBytes(bytes: ByteVector, r: Int, length: Int): ByteVector =
+    val size = length min 4
+    (0 until size).foldLeft(bytes) {
+      case (bs, i) => bs :+ (r >> (8 * i)).toByte
+    }
+  end appendIntToBytes
 
   def nextLong: F[(Rand[F], Long)] =
     for

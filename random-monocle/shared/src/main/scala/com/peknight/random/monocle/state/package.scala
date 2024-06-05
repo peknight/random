@@ -5,6 +5,7 @@ import cats.data.StateT
 import cats.syntax.functor.*
 import com.peknight.random.Random
 import monocle.Lens
+import scodec.bits.ByteVector
 
 import scala.collection.{BuildFrom, Factory}
 
@@ -26,9 +27,9 @@ package object state:
   : StateT[F, A, Int] =
     run(_.between(minInclusive, maxExclusive))
 
-  def nextBytes[F[_], A, C](n: Int)(factory: Factory[Byte, C])(using Applicative[F], Lens[A, Random[F]])
-  : StateT[F, A, C] =
-    run(_.nextBytes(n)(factory))
+  def nextBytes[F[_], A](n: Int)(using Applicative[F], Lens[A, Random[F]])
+  : StateT[F, A, ByteVector] =
+    run(_.nextBytes(n))
 
   def nextLong[F[_], A](using Applicative[F], Lens[A, Random[F]]): StateT[F, A, Long] =
     run(_.nextLong)

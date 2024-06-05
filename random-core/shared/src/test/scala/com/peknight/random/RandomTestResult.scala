@@ -1,6 +1,8 @@
 package com.peknight.random
 
-case class RandomTestResult(nextInt: Int, nextIntBounded: Int, betweenInt: Int, nextBytes: Vector[Byte],
+import scodec.bits.ByteVector
+
+case class RandomTestResult(nextInt: Int, nextIntBounded: Int, betweenInt: Int, nextBytes: ByteVector,
                             nextLong: Long, nextLongBounded: Long, betweenLong: Long, nextBoolean: Boolean,
                             nextFloat: Float, betweenFloat: Float, nextDouble: Double, betweenDouble: Double,
                             nextString: String, nextPrintableChar: Char, shuffle: List[Int]) derives CanEqual
@@ -13,7 +15,7 @@ object RandomTestResult:
       random.nextInt(),
       random.nextInt(param.intBound),
       random.between(param.intMin, param.intMax),
-      random.nextBytes(param.byteSize).to(Vector),
+      ByteVector(random.nextBytes(param.byteSize)),
       random.nextLong(),
       random.nextLong(param.longBound),
       random.between(param.longMin, param.longMax),
