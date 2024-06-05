@@ -9,7 +9,7 @@ import com.peknight.random.monad.Random as MonadRandom
 import scala.collection.Factory
 
 trait Random[F[_]](using MonadError[F, Throwable]) extends MonadRandom[F]:
-  private[this] def require(condition: Boolean, errorMessage: => String): F[Unit] =
+  private def require(condition: Boolean, errorMessage: => String): F[Unit] =
     if condition then Applicative[F].unit
     else ApplicativeError[F, Throwable].raiseError(new IllegalArgumentException(errorMessage))
 
