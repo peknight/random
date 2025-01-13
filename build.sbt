@@ -1,6 +1,6 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.5.0"
+ThisBuild / scalaVersion := "3.6.2"
 
 ThisBuild / organization := "com.peknight"
 
@@ -63,7 +63,7 @@ lazy val randomMonocle = (crossProject(JSPlatform, JVMPlatform) in file("random-
 
 val catsVersion = "2.12.0"
 val scodecVersion = "1.2.1"
-val catsEffectVersion = "3.5.4"
+val catsEffectVersion = "3.5.7"
 val monocleVersion = "3.3.0"
 val scalaCheckVersion = "1.18.0"
 val pekVersion = "0.1.0-SNAPSHOT"
