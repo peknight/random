@@ -19,8 +19,6 @@ lazy val random = (project in file("."))
   .aggregate(
     randomCore.jvm,
     randomCore.js,
-    randomEffect.jvm,
-    randomEffect.js,
     randomMonocle.jvm,
     randomMonocle.js,
   )
@@ -34,20 +32,10 @@ lazy val randomCore = (crossProject(JSPlatform, JVMPlatform) in file("random-cor
   .settings(
     name := "random-core",
     libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-core" % catsVersion,
+      "org.typelevel" %%% "cats-effect" % catsEffectVersion,
       "org.scodec" %%% "scodec-bits" % scodecVersion,
       "org.scalacheck" %%% "scalacheck" % scalaCheckVersion % Test,
       "com.peknight" %%% "generic-core" % pekGenericVersion % Test,
-    ),
-  )
-
-lazy val randomEffect = (crossProject(JSPlatform, JVMPlatform) in file("random-effect"))
-  .dependsOn(randomCore)
-  .settings(commonSettings)
-  .settings(
-    name := "random-effect",
-    libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-effect" % catsEffectVersion,
     ),
   )
 
@@ -61,9 +49,8 @@ lazy val randomMonocle = (crossProject(JSPlatform, JVMPlatform) in file("random-
     ),
   )
 
-val catsVersion = "2.12.0"
-val scodecVersion = "1.2.1"
 val catsEffectVersion = "3.5.7"
+val scodecVersion = "1.2.1"
 val monocleVersion = "3.3.0"
 val scalaCheckVersion = "1.18.0"
 val pekVersion = "0.1.0-SNAPSHOT"
