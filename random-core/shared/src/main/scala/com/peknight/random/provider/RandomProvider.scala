@@ -9,8 +9,9 @@ trait RandomProvider[F[_]]:
   def random: F[Random[F]]
 end RandomProvider
 object RandomProvider:
-  def apply[F[_]: Sync](random: Long => Random[F]): F[RandomProvider[F]] =
+  def of[F[_]: Sync](random: Long => Random[F]): F[RandomProvider[F]] =
     Ref.of[F, Long](LinearCongruential.seedUniquifier).map(seedUniquifier =>
       LinearCongruentialRandomProvider(seedUniquifier)(random)
     )
+  def apply[F[_]](using provider: RandomProvider[F]): RandomProvider[F] = provider
 end RandomProvider
