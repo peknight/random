@@ -1,12 +1,13 @@
 package com.peknight.random.provider
 
-import cats.effect.{Clock, Ref, Sync}
+import cats.effect.std.AtomicCell
+import cats.effect.{Clock, Sync}
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import com.peknight.random.Random
 import com.peknight.random.algorithm.LinearCongruential
 
-case class LinearCongruentialRandomProvider[F[_]: Sync](seedUniquifier: Ref[F, Long])(randomF: Long => Random[F])
+case class LinearCongruentialRandomProvider[F[_]: Sync](seedUniquifier: AtomicCell[F, Long])(randomF: Long => Random[F])
   extends RandomProvider[F]:
   def random: F[Random[F]] =
     for
