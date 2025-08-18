@@ -19,8 +19,10 @@ lazy val randomCore = (crossProject(JVMPlatform, JSPlatform) in file("random-cor
     typelevel.catsEffect,
     scodec.bits,
   ))
-  .settings(crossDependency(scalaCheck, Some(Test)))
-  .settings(crossDependency(peknight.generic, Some(Test)))
+  .settings(crossTestDependencies(
+    scalaCheck,
+    peknight.generic
+  ))
   .settings(
     name := "random-core",
   )
