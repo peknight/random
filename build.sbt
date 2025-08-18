@@ -1,37 +1,7 @@
-ThisBuild / version := "0.1.0-SNAPSHOT"
+import com.peknight.build.gav.*
+import com.peknight.build.sbt.*
 
-ThisBuild / scalaVersion := "3.7.1"
-
-ThisBuild / organization := "com.peknight"
-
-ThisBuild / versionScheme := Some("early-semver")
-
-ThisBuild / publishTo := {
-  val nexus = "https://nexus.peknight.com/repository"
-  if (isSnapshot.value)
-    Some("snapshot" at s"$nexus/maven-snapshots/")
-  else
-    Some("releases" at s"$nexus/maven-releases/")
-}
-
-ThisBuild / credentials ++= Seq(
-  Credentials(Path.userHome / ".sbt" / ".credentials")
-)
-
-ThisBuild / resolvers ++= Seq(
-  "Pek Nexus" at "https://nexus.peknight.com/repository/maven-public/",
-)
-
-lazy val commonSettings = Seq(
-  scalacOptions ++= Seq(
-    "-feature",
-    "-deprecation",
-    "-unchecked",
-    "-Xfatal-warnings",
-    "-language:strictEquality",
-    "-Xmax-inlines:64"
-  ),
-)
+commonSettings
 
 lazy val random = (project in file("."))
   .aggregate(
@@ -40,36 +10,24 @@ lazy val random = (project in file("."))
     randomMonocle.jvm,
     randomMonocle.js,
   )
-  .settings(commonSettings)
   .settings(
     name := "random",
   )
 
-lazy val randomCore = (crossProject(JSPlatform, JVMPlatform) in file("random-core"))
-  .settings(commonSettings)
+lazy val randomCore = (crossProject(JVMPlatform, JSPlatform) in file("random-core"))
+  .settings(crossDependencies(
+    typelevel.catsEffect,
+    scodec.bits,
+  ))
+  .settings(crossDependency(scalaCheck, Some(Test)))
+  .settings(crossDependency(peknight.generic, Some(Test)))
   .settings(
     name := "random-core",
-    libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-effect" % catsEffectVersion,
-      "org.scodec" %%% "scodec-bits" % scodecVersion,
-      "org.scalacheck" %%% "scalacheck" % scalaCheckVersion % Test,
-      "com.peknight" %%% "generic-core" % pekGenericVersion % Test,
-    ),
   )
 
-lazy val randomMonocle = (crossProject(JSPlatform, JVMPlatform) in file("random-monocle"))
+lazy val randomMonocle = (crossProject(JVMPlatform, JSPlatform) in file("random-monocle"))
   .dependsOn(randomCore)
-  .settings(commonSettings)
+  .settings(crossDependencies(optics.monocle))
   .settings(
     name := "random-monocle",
-    libraryDependencies ++= Seq(
-      "dev.optics" %%% "monocle-core" % monocleVersion,
-    ),
   )
-
-val catsEffectVersion = "3.6.1"
-val scodecVersion = "1.2.1"
-val monocleVersion = "3.3.0"
-val scalaCheckVersion = "1.18.1"
-val pekVersion = "0.1.0-SNAPSHOT"
-val pekGenericVersion = pekVersion
